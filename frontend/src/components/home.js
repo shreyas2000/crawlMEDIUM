@@ -10,6 +10,7 @@ function Home(){
       const [tag,setTag] = useState("")
       const [index,setIndex] = useState(10)
       const [index2,setIndex2] = useState(20)
+      const [historyIdx,sethistoryIdx] = useState(20)
 
 
 
@@ -17,6 +18,8 @@ function Home(){
           setIndex(10)
           console.log(index)
           let query = tag.replace(/\s+/g, '-');
+          localStorage.setItem('history'+`${historyIdx}`, query);
+          sethistoryIdx(historyIdx+1)
           axios.get("http://localhost:8080/search/"+`${index}`+"/"+`${query}`)
 
 
@@ -44,6 +47,8 @@ function Home(){
           setIndex2(index+10)
           console.log(index2)
           let query = tag.replace(/\s+/g, '-');
+          localStorage.setItem('history'+`${historyIdx}`, query);
+          sethistoryIdx(historyIdx+1)
           axios.get("http://localhost:8080/search/"+`${index2}`+"/"+`${query}`)
 
 

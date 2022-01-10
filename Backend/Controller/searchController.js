@@ -3,7 +3,7 @@ const axios = require("axios")
 const url = require("url")
 // const cheerio = require("cheerio")
 const WebSocket = require('ws');
-
+const articleModel = require('../Model/articleModel')
 
 
 class searchController {
@@ -96,7 +96,7 @@ async search (req,res) {
       };
 
         axios(config)
-        .then(function (response) {
+        .then(async function (response) {
             const articles = response.data[0].data.tagFeed.items
             
             for(let i=0; i<10;i++){
@@ -108,13 +108,15 @@ async search (req,res) {
                     claps : articles[i].post.clapCount,
                     comments : articles[i].post.postResponses.count,
                 }
+                
+                let article = new articleModel(obj.title,obj.creator,obj.subtitle,obj.link,parseInt(obj.claps),parseInt(obj.comments))
+                article = await article.save()
+                console.log(article)
                 const socket = new WebSocket("ws://localhost:8080/socket");
           
                 socket.addEventListener('open', () => {
                   socket.send(JSON.stringify(obj))
                 })
-      
-
             }
         })
         .catch(function (error) {
